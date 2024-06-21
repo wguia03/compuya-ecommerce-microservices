@@ -58,15 +58,17 @@ public class OrderService {
         );
         paymentClient.requestOrderPayment(paymentRequest);
 
-        orderProducer.sendOrderConfirmation(
-                new OrderConfirmation(
-                        request.reference(),
-                        request.amount(),
-                        request.paymentMethod(),
-                        customer,
-                        purchasedProducts
-                )
-        );
+//        orderProducer.sendOrderConfirmation(
+//                new OrderConfirmation(
+//                        request.reference(),
+//                        request.amount(),
+//                        request.paymentMethod(),
+//                        customer,
+//                        purchasedProducts
+//                )
+//        );
+
+
 
         return order.getId();
     }
