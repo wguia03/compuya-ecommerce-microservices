@@ -1,11 +1,10 @@
 package com.alibou.ecommerce.customer;
 
 public record CustomerResponse(
-    String id,
+    Integer id,
     String firstname,
     String lastname,
-    String email,
-    Address address
+    String email
 ) {
 
 }
