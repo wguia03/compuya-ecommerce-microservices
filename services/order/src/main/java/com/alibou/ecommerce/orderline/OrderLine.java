@@ -14,13 +14,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "customer_line")
+@Table(name = "order_line")
 public class OrderLine {
 
     @Id
@@ -31,4 +33,5 @@ public class OrderLine {
     private Order order;
     private Integer productId;
     private double quantity;
+    private BigDecimal totalPrice;
 }

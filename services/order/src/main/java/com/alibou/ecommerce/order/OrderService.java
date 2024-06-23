@@ -1,9 +1,7 @@
 package com.alibou.ecommerce.order;
 
-import com.alibou.ecommerce.kafka.OrderConfirmation;
 import com.alibou.ecommerce.customer.CustomerClient;
 import com.alibou.ecommerce.exception.BusinessException;
-import com.alibou.ecommerce.kafka.OrderProducer;
 import com.alibou.ecommerce.orderline.OrderLineRequest;
 import com.alibou.ecommerce.orderline.OrderLineService;
 import com.alibou.ecommerce.payment.PaymentClient;
@@ -15,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,6 @@ public class OrderService {
     private final PaymentClient paymentClient;
     private final ProductClient productClient;
     private final OrderLineService orderLineService;
-    private final OrderProducer orderProducer;
 
     @Transactional
     public Integer createOrder(OrderRequest request) {
@@ -39,36 +37,36 @@ public class OrderService {
 
         var order = this.repository.save(mapper.toOrder(request));
 
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
         for (PurchaseRequest purchaseRequest : request.products()) {
+            var product = purchasedProducts.stream()
+                .filter(p -> p.productId().equals(purchaseRequest.productId()))
+                .findAny()
+                .orElseThrow(() -> new BusinessException("Product not found in the purchased products list"));
+
+            BigDecimal productPrice = product.price();
+            BigDecimal orderLinePrice = productPrice.multiply(BigDecimal.valueOf(purchaseRequest.quantity()));
+            totalAmount = totalAmount.add(orderLinePrice);
             orderLineService.saveOrderLine(
-                    new OrderLineRequest(
-                            null,
-                            order.getId(),
-                            purchaseRequest.productId(),
-                            purchaseRequest.quantity()
-                    )
+                new OrderLineRequest(
+                        order.getId(),
+                        purchaseRequest.productId(),
+                        purchaseRequest.quantity(),
+                        orderLinePrice
+                )
             );
         }
+
+        order.setTotalAmount(totalAmount);
+        this.repository.save(order);
+
         var paymentRequest = new PaymentRequest(
-                request.amount(),
+                totalAmount,
                 request.paymentMethod(),
-                order.getId(),
-                order.getReference(),
-                customer
+                order.getId()
         );
         paymentClient.requestOrderPayment(paymentRequest);
-
-//        orderProducer.sendOrderConfirmation(
-//                new OrderConfirmation(
-//                        request.reference(),
-//                        request.amount(),
-//                        request.paymentMethod(),
-//                        customer,
-//                        purchasedProducts
-//                )
-//        );
-
-
 
         return order.getId();
     }
