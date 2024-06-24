@@ -15,3 +15,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+security:
+  jwt:
+    key: BA9BD432115F6B82585C0300D83043BFF006F440
