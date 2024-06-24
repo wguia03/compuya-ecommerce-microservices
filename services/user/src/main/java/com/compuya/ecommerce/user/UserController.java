@@ -27,25 +27,25 @@ public class UserController {
 
   @PutMapping("/auth")
   public ResponseEntity<Void> update(
-      @RequestBody @Valid UserRequest request
+      @RequestBody @Valid UserUpdateRequest request
   ) {
     this.service.updateCustomer(request);
     return ResponseEntity.accepted().build();
   }
 
-  @GetMapping("/auth")
+  @GetMapping
   public ResponseEntity<List<UserResponse>> findAll() {
     return ResponseEntity.ok(this.service.findAllCustomers());
   }
 
-  @GetMapping("/auth/exists/{customer-id}")
+  @GetMapping("/exists/{customer-id}")
   public ResponseEntity<Boolean> existsById(
       @PathVariable("customer-id") Integer customerId
   ) {
     return ResponseEntity.ok(this.service.existsById(customerId));
   }
 
-  @GetMapping("/auth/{customer-id}")
+  @GetMapping("/{customer-id}")
   public ResponseEntity<UserResponse> findById(
       @PathVariable("customer-id") Integer customerId
   ) {
@@ -59,5 +59,4 @@ public class UserController {
     this.service.deleteCustomer(customerId);
     return ResponseEntity.accepted().build();
   }
-
 }

@@ -13,6 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 application:
   config:
-    customer-url: http://localhost:8222/api/v1/customers
+    user-url: http://localhost:8222/api/v1/users
     payment-url: http://localhost:8222/api/v1/payments
     product-url: http://localhost:8222/api/v1/products

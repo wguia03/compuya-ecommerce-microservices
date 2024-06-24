@@ -2,6 +2,8 @@ package com.compuya.ecommerce.order;
 
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class OrderMapper {
 
@@ -12,7 +14,7 @@ public class OrderMapper {
     }
     return Order.builder()
         .id(request.id())
-        .reference(request.reference())
+        .reference(String.format("ORD-%s", UUID.randomUUID().toString().toUpperCase()))
         .paymentMethod(request.paymentMethod())
         .customerId(request.customerId())
         .build();

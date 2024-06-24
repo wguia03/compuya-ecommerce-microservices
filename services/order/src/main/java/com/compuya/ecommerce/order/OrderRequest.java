@@ -11,7 +11,6 @@ import java.util.List;
 @JsonInclude(Include.NON_EMPTY)
 public record OrderRequest(
     Integer id,
-    String reference,
     @NotNull(message = "Payment method should be precised")
     PaymentMethod paymentMethod,
     @NotNull(message = "Customer should be present")

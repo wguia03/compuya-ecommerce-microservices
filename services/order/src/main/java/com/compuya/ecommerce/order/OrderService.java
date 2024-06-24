@@ -1,6 +1,6 @@
 package com.compuya.ecommerce.order;
 
-import com.compuya.ecommerce.user.CustomerClient;
+import com.compuya.ecommerce.user.UserClient;
 import com.compuya.ecommerce.exception.BusinessException;
 import com.compuya.ecommerce.orderline.OrderLineRequest;
 import com.compuya.ecommerce.orderline.OrderLineService;
@@ -23,14 +23,14 @@ public class OrderService {
 
     private final OrderRepository repository;
     private final OrderMapper mapper;
-    private final CustomerClient customerClient;
+    private final UserClient customerClient;
     private final PaymentClient paymentClient;
     private final ProductClient productClient;
     private final OrderLineService orderLineService;
 
     @Transactional
     public Integer createOrder(OrderRequest request) {
-        var customer = this.customerClient.findCustomerById(request.customerId())
+        var customer = this.customerClient.findById(request.customerId())
                 .orElseThrow(() -> new BusinessException("Cannot create order:: No customer exists with the provided ID"));
 
         var purchasedProducts = productClient.purchaseProducts(request.products());

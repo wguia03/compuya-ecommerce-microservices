@@ -1,6 +1,6 @@
 package com.compuya.ecommerce.user;
 
-public record CustomerResponse(
+public record UserResponse(
     Integer id,
     String firstname,
     String lastname,

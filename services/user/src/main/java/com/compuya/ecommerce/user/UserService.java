@@ -90,7 +90,7 @@ public class UserService {
         return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 
-    public void updateCustomer(UserRequest request) {
+    public void updateCustomer(UserUpdateRequest request) {
         var user = this.userRepository.findById(request.id())
                 .orElseThrow(() -> new UserNotFoundException(
                         String.format("Cannot update user:: No user found with the provided ID: %d", request.id())
@@ -99,9 +99,9 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    private void mergeCustomer(UserEntity user, UserRequest request) {
+    private void mergeCustomer(UserEntity user, UserUpdateRequest request) {
         if (StringUtils.isNotBlank(request.username())) {
-            user.setUsername(request.firstname());
+            user.setUsername(request.username());
         }
         if (StringUtils.isNotBlank(request.password())) {
             user.setPassword(passwordEncoder.encode(request.password()));
