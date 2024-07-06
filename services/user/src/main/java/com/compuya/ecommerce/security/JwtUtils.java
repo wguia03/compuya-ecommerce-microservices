@@ -6,6 +6,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.compuya.ecommerce.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,8 +18,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class JwtUtils {
+
+    private final UserRepository userRepository;
 
     @Value("${security.jwt.key}")
     private String privateKey;
@@ -25,6 +30,7 @@ public class JwtUtils {
     public String createToken(Authentication authentication){
 
         Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
+        var userId = userRepository.findUserEntityByUsername(authentication.getPrincipal().toString()).get().getId();
 
         String username = authentication.getPrincipal().toString();
         String authorities = authentication.getAuthorities()
@@ -34,6 +40,7 @@ public class JwtUtils {
 
         return JWT.create()
                 .withSubject(username)
+                .withClaim("userId", userId)
                 .withClaim("authorities", authorities)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1800000)) // 30 minutes
