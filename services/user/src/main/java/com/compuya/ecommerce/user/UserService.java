@@ -61,7 +61,7 @@ public class UserService {
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
 
         SecurityContext securityContextHolder = SecurityContextHolder.getContext();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
 
         return jwtUtils.createToken(authentication);
     }
