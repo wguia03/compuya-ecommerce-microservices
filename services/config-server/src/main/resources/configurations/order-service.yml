@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/order
+    url: jdbc:postgresql://cy-postgres:5432/order
     username: admin2024
     password: admin2024
   jpa:
@@ -13,6 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 application:
   config:
-    user-url: http://localhost:8222/api/v1/users
-    payment-url: http://localhost:8222/api/v1/payments
-    product-url: http://localhost:8222/api/v1/products
+    user-url: http://cy-gateway:8222/api/v1/users
+    payment-url: http://cy-gateway:8222/api/v1/payments
+    product-url: http://cy-gateway:8222/api/v1/products

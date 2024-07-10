@@ -1,4 +1,19 @@
 services:
+
+  user-service:
+    container_name: cy-user
+    image: compuya/user
+    build:
+      context: services/user
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - cy-network
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+
   postgresql:
     container_name: cy-postgres
     image: postgres
@@ -11,20 +26,12 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - microservices-net
+      - cy-network
     restart: unless-stopped
 
-  zipkin:
-    container_name: cy-zipkin
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - microservices-net
-
 networks:
-  microservices-net:
-    driver: bridge
+  cy-network:
+    external: true
 
 volumes:
   postgres:

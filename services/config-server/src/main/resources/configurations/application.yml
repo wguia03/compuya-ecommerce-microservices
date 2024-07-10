@@ -1,11 +1,9 @@
 eureka:
   instance:
-    hostname: localhost
+    hostname: cy-discovery
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
-name:
-  value: alibou
+      defaultZone: http://cy-discovery:8761/eureka
 spring:
   cloud:
     config:
