@@ -1,6 +1,6 @@
 eureka:
   instance:
-    hostname: cy-discovery
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://cy-discovery:8761/eureka

@@ -14,6 +14,71 @@ services:
       - postgresql
     restart: unless-stopped
 
+  product-service:
+    container_name: cy-product
+    image: compuya/product
+    build:
+      context: services/product
+      dockerfile: Dockerfile
+    ports:
+      - "8050:8050"
+    networks:
+      - cy-network
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+
+  order-service:
+    container_name: cy-order
+    image: compuya/order
+    build:
+      context: services/order
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070"
+    networks:
+      - cy-network
+    depends_on:
+      - postgresql
+      - user-service
+      - product-service
+    restart: unless-stopped
+
+  payment-service:
+    container_name: cy-payment
+    image: compuya/payment
+    build:
+      context: services/payment
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    networks:
+      - cy-network
+    depends_on:
+      - postgresql
+      - user-service
+      - product-service
+      - order-service
+    restart: unless-stopped
+
+  gateway-service:
+    container_name: cy-gateway
+    image: compuya/gateway
+    build:
+      context: services/gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8222:8222"
+    networks:
+      - cy-network
+    depends_on:
+      - postgresql
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+    restart: unless-stopped
+
   postgresql:
     container_name: cy-postgres
     image: postgres
